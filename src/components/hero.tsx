@@ -69,7 +69,7 @@ export function Hero() {
                 <Magnetic strength={10}>
                   <a
                     href="#contact"
-                    className="press inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold hover:bg-secondary"
+                    className="press inline-flex items-center gap-2 edge rounded-full bg-card px-6 py-3 text-sm font-semibold hover:bg-secondary"
                   >
                     Get in touch
                   </a>
@@ -120,7 +120,7 @@ export function Hero() {
         </div>
 
         <div className="mt-4">
-          <div className="overflow-hidden rounded-2xl border border-border bg-card py-2.5 sm:rounded-full sm:py-3">
+          <div className="overflow-hidden edge-card rounded-2xl bg-card py-2.5 sm:rounded-full sm:py-3">
             <div className="marquee-track gap-5 px-3 sm:gap-8 sm:px-4">
               {[...uniqueTools, ...uniqueTools].map((tool, i) => (
                 <span

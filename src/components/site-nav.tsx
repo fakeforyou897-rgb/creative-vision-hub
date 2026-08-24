@@ -98,7 +98,7 @@ export function SiteNav() {
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
       <nav
         aria-label="Main"
-        className={`mx-auto rounded-3xl border border-border/70 bg-card/85 backdrop-blur-md lg:rounded-full ${
+        className={`mx-auto rounded-3xl edge-card bg-card/85 backdrop-blur-md lg:rounded-full ${
           reducedMotion ? "transition-none" : "transition-all duration-500"
         } ${
           scrolled
@@ -161,7 +161,7 @@ export function SiteNav() {
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="press relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-secondary text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none lg:hidden"
+              className="press relative grid size-9 shrink-0 place-items-center overflow-hidden edge rounded-full bg-secondary text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none lg:hidden"
             >
               <Menu
                 aria-hidden="true"
@@ -188,7 +188,7 @@ export function SiteNav() {
           }`}
         >
           <div className="min-h-0 overflow-hidden">
-            <div className="border-t border-border/70 px-3 pt-2 pb-3">
+            <div className="edge-t px-3 pt-2 pb-3">
               <ul className="grid gap-1">
                 {links.map((link, i) => (
                   <li

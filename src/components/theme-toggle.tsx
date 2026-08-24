@@ -101,7 +101,7 @@ export function ThemeToggle() {
       whileHover={{ y: -1.5, scale: 1.04 }}
       whileTap={{ scale: 0.9, y: 0 }}
       transition={SURFACE_SPRING}
-      className="celestial-toggle grid size-9 shrink-0 place-items-center rounded-full border border-border/70 bg-secondary text-foreground"
+      className="celestial-toggle grid size-9 shrink-0 place-items-center edge rounded-full bg-secondary text-foreground"
     >
       {/* Hover halo stays CSS-driven so it can't fight the button spring. */}
       <span aria-hidden="true" className="celestial-halo" />

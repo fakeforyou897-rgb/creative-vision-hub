@@ -44,7 +44,7 @@ export function Services() {
                   {service.items.map((item) => (
                     <li
                       key={item}
-                      className="tag-pop rounded-full border border-border px-2.5 py-1 text-[0.68rem] font-semibold tracking-wide uppercase hover:border-brand-orange hover:text-brand-orange"
+                      className="tag-pop edge rounded-full px-2.5 py-1 text-[0.68rem] font-semibold tracking-wide uppercase hover:border-brand-orange hover:text-brand-orange"
                     >
                       {item}
                     </li>

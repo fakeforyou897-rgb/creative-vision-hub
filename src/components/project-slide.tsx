@@ -93,7 +93,7 @@ export function ProjectSlide({ project }: { project: Project }) {
                 <span
                   key={color}
                   title={color}
-                  className="sticker-in size-7 rounded-full ring-1 ring-black/5 transition-transform duration-300 hover:scale-125 hover:rotate-12"
+                  className="sticker-in size-7 rounded-full ring-1 ring-border-strong transition-transform duration-300 hover:scale-125 hover:rotate-12"
                   style={{ backgroundColor: color, animationDelay: `${200 + i * 70}ms` }}
                 />
               ))}
