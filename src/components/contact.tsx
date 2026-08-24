@@ -57,7 +57,7 @@ export function Contact() {
                     href="https://linkedin.com/in/mostafasamirsaid"
                     target="_blank"
                     rel="noreferrer"
-                    className="press inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-sm font-semibold hover:bg-secondary"
+                    className="press inline-flex items-center gap-2 edge rounded-full bg-card px-7 py-3.5 text-sm font-semibold hover:bg-secondary"
                   >
                     LinkedIn
                   </a>
@@ -68,7 +68,7 @@ export function Contact() {
             <dl className="mx-auto mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">
               {facts.map((fact, i) => (
                 <Reveal key={fact.label} variant="pop" delay={200 + i * 100}>
-                  <div className="card-hover rounded-2xl border border-border bg-card px-4 py-4">
+                  <div className="card-hover edge-card rounded-2xl bg-card px-4 py-4">
                     <dt className="text-[0.65rem] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
                       {fact.label}
                     </dt>

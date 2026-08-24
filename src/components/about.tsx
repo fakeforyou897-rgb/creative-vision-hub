@@ -61,7 +61,7 @@ export function About() {
             {capabilities.map((cap) => (
               <li
                 key={cap}
-                className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs font-semibold tracking-wide uppercase"
+                className="edge rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold tracking-wide uppercase"
               >
                 {cap}
               </li>

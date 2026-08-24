@@ -43,7 +43,7 @@ export function Breakdown() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {skillGroups.map((group) => (
-                  <div key={group.title} className="rounded-2xl border border-border bg-card p-4">
+                  <div key={group.title} className="edge-card rounded-2xl bg-card p-4">
                     <h3 className="font-display text-sm font-extrabold">{group.title}</h3>
                     <ul className="mt-3 flex flex-wrap gap-1.5">
                       {group.items.map((item) => (
@@ -79,7 +79,7 @@ export function Breakdown() {
                 {concepts.map((layer) => (
                   <div
                     key={layer.letter}
-                    className="flex gap-4 rounded-2xl border border-border bg-card p-4"
+                    className="flex gap-4 edge-card rounded-2xl bg-card p-4"
                   >
                     <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary font-display text-[0.7rem] font-extrabold text-primary-foreground">
                       {layer.letter}
