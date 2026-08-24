@@ -1,5 +1,7 @@
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 import { ThemeToggle } from "./theme-toggle";
 
@@ -11,9 +13,16 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
+
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const restoreFocus = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -22,17 +31,76 @@ export function SiteNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const closeMenu = useCallback(() => {
+    restoreFocus.current = true;
+    setOpen(false);
+  }, []);
+
+  // Move focus into the panel on open; restore it to the toggle on close.
+  useEffect(() => {
+    if (open) {
+      const first = panelRef.current?.querySelector<HTMLElement>(FOCUSABLE);
+      first?.focus();
+      return;
+    }
+    if (restoreFocus.current) {
+      restoreFocus.current = false;
+      toggleRef.current?.focus();
+    }
+  }, [open]);
+
+  // Escape closes; Tab/Shift+Tab cycles within the open panel.
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+      const items = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (el) => el.offsetParent !== null || el === document.activeElement,
+      );
+      const trap = [toggleRef.current, ...items].filter(Boolean) as HTMLElement[];
+      if (trap.length === 0) return;
+
+      const first = trap[0]!;
+      const last = trap[trap.length - 1]!;
+
+      const active = document.activeElement as HTMLElement | null;
+
+      if (!active || !trap.includes(active)) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, closeMenu]);
+
+  const panelMotion = reducedMotion
+    ? "transition-none"
+    : "transition-[grid-template-rows,opacity] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]";
+  const itemMotion = reducedMotion ? "transition-none" : "transition-all duration-300 ease-out";
+  const itemDelay = (i: number) => (reducedMotion || !open ? "0ms" : `${60 + i * 45}ms`);
 
   return (
     <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6 sm:pt-4">
       <nav
-        className={`mx-auto rounded-3xl border border-border/70 bg-card/85 backdrop-blur-md transition-all duration-500 lg:rounded-full ${
+        aria-label="Main"
+        className={`mx-auto rounded-3xl border border-border/70 bg-card/85 backdrop-blur-md lg:rounded-full ${
+          reducedMotion ? "transition-none" : "transition-all duration-500"
+        } ${
           scrolled
             ? "max-w-4xl shadow-[0_18px_40px_-22px_oklch(0.28_0.05_265_/_0.55)]"
             : "max-w-6xl shadow-[var(--shadow-lift)]"
@@ -54,7 +122,7 @@ export function SiteNav() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="link-swipe relative rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    className="link-swipe relative rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
                     {link.label}
                   </a>
@@ -68,35 +136,42 @@ export function SiteNav() {
               href="#contact"
               aria-label="Available Q3 2026 — get in touch"
               title="Available Q3 2026"
-              className={`press sheen hidden shrink-0 items-center justify-center gap-2 rounded-full bg-primary py-2 text-xs font-semibold tracking-wide whitespace-nowrap text-primary-foreground uppercase transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:inline-flex ${
-                scrolled ? "size-9 px-0" : "px-4"
-              }`}
+              className={`press sheen hidden shrink-0 items-center justify-center gap-2 rounded-full bg-primary py-2 text-xs font-semibold tracking-wide whitespace-nowrap text-primary-foreground uppercase focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:inline-flex ${
+                reducedMotion
+                  ? "transition-none"
+                  : "transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              } ${scrolled ? "size-9 px-0" : "px-4"}`}
             >
               <span className="blink-dot size-1.5 shrink-0 rounded-full bg-brand-yellow" />
               <span
-                className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  scrolled ? "max-w-0 opacity-0" : "max-w-[12rem] opacity-100"
-                }`}
+                className={`overflow-hidden ${
+                  reducedMotion
+                    ? "transition-none"
+                    : "transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                } ${scrolled ? "max-w-0 opacity-0" : "max-w-[12rem] opacity-100"}`}
               >
                 Available Q3 2026
               </span>
             </a>
 
-
             <button
+              ref={toggleRef}
               type="button"
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => (open ? closeMenu() : setOpen(true))}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              className="press relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-secondary text-foreground lg:hidden"
+              aria-controls="mobile-menu"
+              className="press relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-border bg-secondary text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none lg:hidden"
             >
               <Menu
-                className={`absolute size-4 transition-all duration-300 ease-out ${
+                aria-hidden="true"
+                className={`absolute size-4 ${itemMotion} ${
                   open ? "rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100"
                 }`}
               />
               <X
-                className={`absolute size-4 transition-all duration-300 ease-out ${
+                aria-hidden="true"
+                className={`absolute size-4 ${itemMotion} ${
                   open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-75 opacity-0"
                 }`}
               />
@@ -105,7 +180,10 @@ export function SiteNav() {
         </div>
 
         <div
-          className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+          id="mobile-menu"
+          ref={panelRef}
+          inert={!open ? true : undefined}
+          className={`grid overflow-hidden lg:hidden ${panelMotion} ${
             open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
           }`}
         >
@@ -115,15 +193,17 @@ export function SiteNav() {
                 {links.map((link, i) => (
                   <li
                     key={link.href}
-                    className={`transition-all duration-300 ease-out ${
-                      open ? "translate-y-0 opacity-100" : "-translate-y-1.5 opacity-0"
+                    className={`${itemMotion} ${
+                      open || reducedMotion
+                        ? "translate-y-0 opacity-100"
+                        : "-translate-y-1.5 opacity-0"
                     }`}
-                    style={{ transitionDelay: open ? `${60 + i * 45}ms` : "0ms" }}
+                    style={{ transitionDelay: itemDelay(i) }}
                   >
                     <a
                       href={link.href}
-                      onClick={() => setOpen(false)}
-                      className="block rounded-2xl px-3 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                      onClick={closeMenu}
+                      className="block rounded-2xl px-3 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                     >
                       {link.label}
                     </a>
@@ -132,11 +212,13 @@ export function SiteNav() {
               </ul>
               <a
                 href="#contact"
-                onClick={() => setOpen(false)}
-                className={`press sheen mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase transition-all duration-300 ease-out sm:hidden ${
-                  open ? "translate-y-0 opacity-100" : "-translate-y-1.5 opacity-0"
+                onClick={closeMenu}
+                className={`press sheen mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:hidden ${itemMotion} ${
+                  open || reducedMotion
+                    ? "translate-y-0 opacity-100"
+                    : "-translate-y-1.5 opacity-0"
                 }`}
-                style={{ transitionDelay: open ? `${60 + links.length * 45}ms` : "0ms" }}
+                style={{ transitionDelay: itemDelay(links.length) }}
               >
                 <span className="blink-dot size-1.5 shrink-0 rounded-full bg-brand-yellow" />
                 Available Q3 2026
@@ -144,7 +226,6 @@ export function SiteNav() {
             </div>
           </div>
         </div>
-
       </nav>
     </header>
   );
