@@ -720,19 +720,30 @@
   --muted-foreground: var(--ink-soft);
   --accent: var(--brand-orange);
   --accent-foreground: oklch(0.18 0.03 60);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
+  /* Dark surfaces read edges as light, so seams get dimmer, not darker. */
+  --border: oklch(1 0 0 / 9%);
+  --border-subtle: oklch(1 0 0 / 6%);
+  --border-strong: oklch(1 0 0 / 15%);
+  --input: oklch(1 0 0 / 13%);
   --sidebar: oklch(0.235 0.025 265);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: oklch(0.96 0.01 95);
   --sidebar-primary-foreground: oklch(0.2 0.03 265);
   --sidebar-accent: oklch(0.28 0.03 265);
   --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-border: var(--border);
 
   --shadow-slide: 0 24px 60px -28px oklch(0 0 0 / 0.65);
   --shadow-lift: 0 12px 30px -16px oklch(0 0 0 / 0.7);
+
+  --edge-highlight: oklch(1 0 0 / 0.07);
+  --edge-seam: color-mix(in oklab, var(--border-strong) 90%, transparent);
+  --shadow-hairline: inset 0 1px 0 var(--edge-highlight), 0 1px 2px -1px oklch(0 0 0 / 0.5);
+  --shadow-edge:
+    inset 0 1px 0 var(--edge-highlight), 0 1px 1px -0.5px oklch(0 0 0 / 0.45),
+    0 8px 22px -18px oklch(0 0 0 / 0.8);
 }
+
 
 /* Theme toggle: sun <-> moon celestial morph */
 .celestial-toggle {
