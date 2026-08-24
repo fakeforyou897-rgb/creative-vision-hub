@@ -143,6 +143,30 @@
     0 8px 22px -18px oklch(0.28 0.05 265 / 0.5);
 }
 
+/*
+ * Edge utilities — use these instead of `border border-border` on surfaces.
+ * hairline : one sub-pixel seam, no depth. For dividers and small pills.
+ * edge     : seam + top light catch. For chips, inputs, secondary buttons.
+ * edge-card: seam + light catch + ambient contact shadow. For raised cards.
+ */
+@utility hairline {
+  border: 1px solid var(--border-subtle);
+}
+
+@utility edge {
+  border: 1px solid var(--edge-seam);
+  box-shadow: var(--shadow-hairline);
+}
+
+@utility edge-card {
+  border: 1px solid var(--edge-seam);
+  box-shadow: var(--shadow-edge);
+}
+
+@utility edge-t {
+  border-top: 1px solid var(--border-subtle);
+}
+
 
 @layer base {
   * {
