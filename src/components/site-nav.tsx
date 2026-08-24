@@ -68,8 +68,9 @@ export function SiteNav() {
       const trap = [toggleRef.current, ...items].filter(Boolean) as HTMLElement[];
       if (trap.length === 0) return;
 
-      const first = trap[0];
-      const last = trap[trap.length - 1];
+      const first = trap[0]!;
+      const last = trap[trap.length - 1]!;
+
       const active = document.activeElement as HTMLElement | null;
 
       if (!active || !trap.includes(active)) {
