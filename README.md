@@ -1,12 +1,12 @@
 # Creative Vision Hub
 
-clone this https://github.com/communitycarfree-lgtm/creative-vision-hub
+clone https://github.com/carcoo453-sudo33/creative-vision-refined
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/ae223d11-a262-4397-bf69-0f8ff3d346ae).
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/04314f6b-daf4-4678-ab99-0660f0a9899e).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
